@@ -1,9 +1,11 @@
 package api
+
 import (
-	"github.com/gofiber/fiber/v2"
 	"go-ecommerce-app/config"
-	"net/http"	
-	
+	"go-ecommerce-app/internal/api/rest"
+	"go-ecommerce-app/internal/api/rest/handlers"
+
+	"github.com/gofiber/fiber/v2"
 )
 
 
@@ -11,14 +13,21 @@ import (
 func StartServer(config config.AppConfig) {
 	app := fiber.New()
 
-	app.Get("/health", HealthCheck)
+	rh := &rest.RestHandler{
+		App: app,
+	}
+
+	SetupUserRoutes(rh)
 
 	app.Listen(config.ServerPort)
 }
 
-func HealthCheck(ctx *fiber.Ctx) error {
+func SetupUserRoutes(rh *rest.RestHandler) {
+	// user handler
+	handlers.SetupUserRoutes(rh)
 
-	return ctx.Status(http.StatusOK).JSON(&fiber.Map{
-		"message": "I am breathing!",
-	})
+	// transaction handler
+
+	// catalog handler
 }
+
